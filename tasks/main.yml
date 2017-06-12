@@ -1,0 +1,214 @@
+---
+# tasks file for php7
+
+- name: Update
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  tags: global
+
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+  tags: global
+
+- name: Installing repository nginx
+  apt_repository:
+    repo: "{{ item }} http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release }} nginx"
+    state: present
+  with_items:
+    - deb-src
+    - deb
+  tags: nginx
+
+- name: Install gpg key nginx
+  apt_key:
+    id: 7BD9BF62
+    url: http://nginx.org/keys/nginx_signing.key
+    state: present
+  tags: nginx
+
+- name: Install ngnix
+  apt:
+    name: nginx
+    state: latest
+    update_cache: yes
+  notify: nginx reload
+  tags: nginx
+
+- name: Configure nodesource
+  shell: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+  become: true
+  tags: nodejs
+
+- name: Install nodejs
+  package:
+    name: nodejs
+    state: latest
+  tags: nodejs
+
+- name: Install Dependecies
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - re2c
+    - bison
+    - libbz2-dev
+    - libxml2-dev
+    - gcc
+    - g++
+    - make
+    - pkg-config
+    - libssl-dev
+    - libsslcommon2-dev
+    - libcurl4-openssl-dev
+    - libpng-dev
+    - libfreetype6-dev
+    - libmcrypt-dev
+    - autoconf
+
+- name: Download icu4c-5_2-src.tgz
+  get_url:
+    url: http://download.icu-project.org/files/icu4c/59.1/icu4c-59_1-src.tgz
+    dest: /tmp/icu4c-59_1-src.tgz
+  tags: icu4c
+
+- name: Extract icu4c-59_1-src.tgz
+  unarchive:
+    src: /tmp/icu4c-59_1-src.tgz
+    dest: /tmp
+    remote_src: True
+  tags: icu4c
+
+- name: Build icu4c 59.1
+  shell: "cd /tmp/icu/source; {{ item }}"
+  with_items:
+    - ./configure --prefix=/usr
+    - make
+    - make install
+  tags: icu4c
+
+- name: Create /opt/source
+  file:
+    path: /opt/source/
+    state: directory
+    mode: 755
+  tags: php7
+
+- name: Download php-7.1.5.tar.gz
+  get_url:
+    url: http://br2.php.net/get/php-7.1.5.tar.gz/from/this/mirror
+    dest: /opt/source/php-7.1.5.tar.gz
+  tags: php7
+
+- name: Extract php-7.1.5.tar.gz
+  unarchive:
+    src: /opt/source/php-7.1.5.tar.gz
+    dest: /opt/source
+    remote_src: True
+  tags: php7
+
+- name: Configure php-7.1.5
+  shell: "cd /opt/source/php-7.1.5; ./configure \
+   --prefix=/opt/php-7.1.5 \
+   --with-freetype-dir \
+   --enable-mbstring \
+   --with-libxml-dir=/usr \
+   --enable-calendar \
+   --with-curl \
+   --with-mcrypt \
+   --with-gd \
+   --disable-rpath \
+   --enable-inline-optimization \
+   --with-bz2 \
+   --enable-sockets \
+   --enable-sysvsem \
+   --enable-sysvshm \
+   --enable-pcntl \
+   --enable-intl \
+   --enable-mbregex \
+   --with-mhash \
+   --enable-zip \
+   --with-pcre-regex \
+   --with-pdo-mysql \
+   --with-mysqli \
+   --with-png-dir=/usr \
+   --enable-gd-native-ttf \
+   --with-openssl \
+   --with-fpm-user=www-data \
+   --with-fpm-group=www-data \
+   --with-libdir=lib64 \
+   --enable-ftp \
+   --with-kerberos \
+   --with-gettext \
+   --with-gd \
+   --enable-fpm"
+  tags: php7
+
+- name: Install php-7.1.5
+  shell: "cd /opt/source/php-7.1.5; {{ item }}"
+  with_items:
+   - make
+   - make install
+  tags: php7
+
+- name: Configure php.ini
+  template:
+    src: php.ini
+    dest: /opt/php-7.1.5/lib/php.ini
+    owner: root
+    group: root
+    mode: 0644
+  tags: php7
+
+- name: Configure php-fpm.conf
+  template:
+    src: php-fpm.conf.j2
+    dest: /opt/php-7.1.5/etc/php-fpm.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags: php7
+
+- name: Create systemd
+  template:
+    src: php7.1-fpm.service
+    dest: /lib/systemd/system/php7.1-fpm.service
+    owner: root
+    group: root
+    mode: 0755
+  tags: php7
+
+- name: Enable php7.1
+  shell: systemctl enable php7.1-fpm.service
+  become: true
+  tags: php7
+
+- name: daemon-reload
+  shell: systemctl daemon-reload
+  become: true
+  notify: php reload
+  tags: php7
+
+- name: Download X-Debug
+  get_url:
+    url: https://xdebug.org/files/xdebug-2.5.3.tgz
+    dest: /opt/source/xdebug-2.5.3.tgz
+  tags: x-debug
+
+- name: Extract xdebug-2.5.3.tgz
+  unarchive:
+    src: /opt/source/xdebug-2.5.3.tgz
+    dest: /opt/source
+    remote_src: True
+  tags: x-debug
+
+- name: Configure x-debug
+  shell: "cd /opt/source/xdebug-2.5.3; {{ item }}"
+  with_items:
+    - /opt/php-7.1.5/bin/phpize
+    - ./configure --enable-xdebug --with-php-config=/opt/php-7.1.5/bin/php-config
+    - make
+    - cp modules/xdebug.so /opt/php-7.1.5/lib/php/extensions/no-debug-non-zts-20160303/
+  tags: x-debug

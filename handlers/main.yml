@@ -1,0 +1,14 @@
+---
+# handlers file for php7
+
+- name: php reload
+  service:
+    name: php7.1-fpm
+    state: restarted
+    enabled: yes
+
+- name: nginx reload
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
