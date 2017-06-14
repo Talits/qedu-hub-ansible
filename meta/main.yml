@@ -1,16 +1,16 @@
 galaxy_info:
   author: Eduardo Rozario
   description: PHP FPM 7.1
-  company: Rivendel Tecnlogias
+  company: Rivendel Tecnologia
 
   license: license (GPLv2, CC-BY, etc)
 
   min_ansible_version: 1.2
 
   # platforms:
-  - name: ubuntu
-     versions:
-     - 16.04
+  #- name: ubuntu
+  #   versions:
+  #   - 16.04
 
   galaxy_tags: []
 
