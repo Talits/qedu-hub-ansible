@@ -8,12 +8,9 @@ Execute the role with ansible
 
 Configure the file hosts and the file yml 
 
-__
-[php]
+> [php]
 
-
-127.0.0.1
-__
+>  127.0.0.1
 
 
 
