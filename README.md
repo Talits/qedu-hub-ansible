@@ -1,21 +1,21 @@
 # qedu-hub-ansible
 
+This is a project with php7 and/or nginx 
+
 Execute the role with ansible 
 
 `ansible-playbook -i hosts -u user --private-key arquivo.yml --diff`
 
-example hosts:
+Configure the file hosts and the file yml 
 
-**
+__
 [php]
 
-127.0.0.1
-**
 
-example playbook.yml:
-**
-- hosts: php 
-  become: True  
-  roles:    
-    - nome-da-role
-**
+127.0.0.1
+__
+
+
+
+
+
