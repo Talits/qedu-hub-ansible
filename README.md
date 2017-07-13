@@ -10,16 +10,22 @@ Configure the file hosts and the file yml
 
 ## hosts
 
-> [php]
+```
+[php]
 
->  127.0.0.1
+127.0.0.1
 
+```
 
 ## .yml
+
+
+```
  
 - hosts: zabbix  
   become: True  
   roles:    
    - nome-da-role
+```
 
 
