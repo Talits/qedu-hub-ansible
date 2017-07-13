@@ -7,14 +7,14 @@ Execute the role with ansible
 example hosts:
 
 
-[php]
+`[php]
 
-127.0.0.1
+127.0.0.1`
 
 
 example playbook.yml:
 
-- hosts: php 
+`- hosts: php 
   become: True  
   roles:    
-    - nome-da-role
+    - nome-da-role`
