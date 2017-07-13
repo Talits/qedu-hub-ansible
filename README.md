@@ -17,9 +17,9 @@ Configure the file hosts and the file yml
 
 ## .yml
  
->>- hosts: zabbix  
->>  become: True  
->>  roles:    
->>    - nome-da-role
+- hosts: zabbix  
+  become: True  
+  roles:    
+   - nome-da-role
 
 
