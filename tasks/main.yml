@@ -138,6 +138,10 @@
     mode: 0644
   tags: php7
 
+- name: Get private IPV4
+  shell: curl http://169.254.169.254/latest/meta-data/local-ipv4
+  register: ipv4
+
 - name: Configure php-fpm.conf
   template:
     src: php-fpm.conf.j2
@@ -171,6 +175,7 @@
   get_url:
     url: https://xdebug.org/files/xdebug-2.5.3.tgz
     dest: /opt/source/xdebug-2.5.3.tgz
+  when: env == 'dev'
   tags: x-debug
 
 - name: Extract xdebug-2.5.3.tgz
@@ -178,6 +183,7 @@
     src: /opt/source/xdebug-2.5.3.tgz
     dest: /opt/source
     remote_src: True
+  when: env == 'dev'
   tags: x-debug
 
 - name: Configure x-debug
@@ -187,4 +193,46 @@
     - ./configure --enable-xdebug --with-php-config=/opt/php-7.1.5/bin/php-config
     - make
     - cp modules/xdebug.so /opt/php-7.1.5/lib/php/extensions/no-debug-non-zts-20160303/
+  when: env == 'dev'
   tags: x-debug
+
+- name: Configure x-debug
+  shell: "cd /opt/source/xdebug-2.5.3; {{ item }}"
+  with_items:
+    - /opt/php-7.1.5/bin/phpize
+    - ./configure --enable-xdebug --with-php-config=/opt/php-7.1.5/bin/php-config
+    - make
+    - cp modules/xdebug.so /opt/php-7.1.5/lib/php/extensions/no-debug-non-zts-20160303/
+  when: env == 'dev'
+  tags: x-debug
+
+- name: Set newrelic
+  set_fact:
+    newrelic_loaded_os_family: "{{ ansible_os_family }}"
+
+- name:  Add New Relic repo key
+  apt_key:
+    url: https://download.newrelic.com/548C16BF.gpg
+    id: 548C16BF
+    state: present
+
+- name: Add New Relic repository
+  copy:
+    content: "deb http://apt.newrelic.com/debian/ newrelic non-free"
+    dest: /etc/apt/sources.list.d/newrelic.list
+    owner: root
+    group: root
+    mode: 0644
+  register: newrelic_repo
+
+- name: apt-get update
+  apt:
+    update_cache: yes
+  when: newrelic_repo.changed
+
+- name: Install New Relic PHP Agent
+  apt:
+    pkg: newrelic-php5
+    update_cache: yes
+    cache_valid_time: 86400
+    state: latest
