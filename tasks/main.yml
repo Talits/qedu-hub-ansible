@@ -175,6 +175,7 @@
   get_url:
     url: https://xdebug.org/files/xdebug-2.5.3.tgz
     dest: /opt/source/xdebug-2.5.3.tgz
+  when: env == 'dev'
   tags: x-debug
 
 - name: Extract xdebug-2.5.3.tgz
@@ -182,6 +183,7 @@
     src: /opt/source/xdebug-2.5.3.tgz
     dest: /opt/source
     remote_src: True
+  when: env == 'dev'
   tags: x-debug
 
 - name: Configure x-debug
@@ -191,6 +193,7 @@
     - ./configure --enable-xdebug --with-php-config=/opt/php-7.1.5/bin/php-config
     - make
     - cp modules/xdebug.so /opt/php-7.1.5/lib/php/extensions/no-debug-non-zts-20160303/
+  when: env == 'dev'
   tags: x-debug
 
 - name: Configure x-debug
@@ -200,6 +203,7 @@
     - ./configure --enable-xdebug --with-php-config=/opt/php-7.1.5/bin/php-config
     - make
     - cp modules/xdebug.so /opt/php-7.1.5/lib/php/extensions/no-debug-non-zts-20160303/
+  when: env == 'dev'
   tags: x-debug
 
 - name: Set newrelic
