@@ -1,0 +1,4 @@
+- hosts: php  
+  become: True  
+  roles:    
+   - qedu-hub-ansible
