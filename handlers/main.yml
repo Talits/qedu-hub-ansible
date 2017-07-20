@@ -3,7 +3,7 @@
 
 - name: php reload
   service:
-    name: php7.1-fpm
+    name: php7-fpm
     state: restarted
     enabled: yes
 

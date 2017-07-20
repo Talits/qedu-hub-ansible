@@ -65,6 +65,16 @@
     - make install
   tags: icu4c
 
+- name: Create www-data group
+  group:
+    name: www-data
+    state: present
+
+- name: Add www-data user
+  user:
+    name: www-data
+    groups: www-data
+
 - name: Create /opt/source
   file:
     path: /opt/source/
@@ -151,17 +161,23 @@
     mode: 0644
   tags: php7
 
+- name: Replace INTERNAL_IP_PLACEHOLDER for the real IP
+  replace:
+    path: /opt/php-7.1.5/etc/php-fpm.conf
+    regexp: INTERNAL_IP_PLACEHOLDER
+    replace: "{{ ansible_eth0.ipv4.address }}"
+
 - name: Create systemd
   template:
-    src: php7.1-fpm.service
-    dest: /lib/systemd/system/php7.1-fpm.service
+    src: php7-fpm.service
+    dest: /lib/systemd/system/php7-fpm.service
     owner: root
     group: root
     mode: 0755
   tags: php7
 
-- name: Enable php7.1
-  shell: systemctl enable php7.1-fpm.service
+- name: Enable php7
+  shell: systemctl enable php7-fpm.service
   become: true
   tags: php7
 
@@ -236,3 +252,8 @@
     update_cache: yes
     cache_valid_time: 86400
     state: latest
+
+- name: Start php7-fpm service
+  shell: systemctl start php7-fpm.service
+  become: true
+  tags: php7
