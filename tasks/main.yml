@@ -270,6 +270,10 @@
     cache_valid_time: 86400
     state: latest
 
+- name: Install NewRelic
+  shell: NR_INSTALL_SILENT=1 NR_INSTALL_KEY={{ nr_install_key }} newrelic-install install
+  when: nr_install_key is defined
+
 - name: Start php7-fpm service
   shell: systemctl start php7-fpm.service
   become: true
