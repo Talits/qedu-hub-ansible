@@ -16,7 +16,7 @@ Created file hosts and yml with your rules, according the examples
 
 Execute the role with ansible 
 
-`ansible-playbook -i hosts -u user --private-key arquivo.yml --diff`
+`ansible-playbook -i hosts -u ubuntu --private-key ~/.ssh/key.pem playbook.yml --diff`
 
 
 
