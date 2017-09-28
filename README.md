@@ -1,26 +1,11 @@
-# qedu-hub-ansible
+Roles Qedu
 
-This is a project with php7 and/or nginx 
+There are roles ansible for QEDU, content many functions
 
+License
 
-Create a folder and clone the project, the structure will be :
-```
-folder created
----file hosts
----file yml
----------folder role
-    
-```
-Created file hosts and yml with your rules, according the examples
- 
+BSD
 
-Execute the role with ansible 
+Author Information
 
-`ansible-playbook -i hosts -u ubuntu --private-key ~/.ssh/key.pem playbook.yml --diff`
-
-
-
-
-
-
-
+Talita Pereira - Rivendel Tecnologia

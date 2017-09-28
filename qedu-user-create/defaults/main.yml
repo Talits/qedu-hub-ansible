@@ -1,0 +1,12 @@
+---
+# defaults file for qedu-user-create
+ #users_group: root
+ path: /home/ubuntu
+ list:
+  - username: fgh
+    state: present
+    key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7UTwUZpM9BzqXto69wle/3q/xKXdomIWGRKaNfW3CHKI/6Xw0rWsL/7rhd244a4iiErf2eCqTJsrkm5KlSKv+6bvHI9w0FhfQLpI8uDK6Z/Fxp6vbK9ToEKxaIpcwXclJdD7YKdqAAKVJS2AFVwpoPTm12+Q1VwzU9QvNeysWiZ3tKDfx3GzEYgD4QF3HXTSU/v9EEyrVgZXupgt9KxegV7TWThCnaq41izKfGLUDvxmnAh9ovEUUW15skBamVjbQNQ4PYhb9bCOAx/SA4dZb7XZmxMLvrmann7eJ4h0vingu18+wGRm83Fe9Iba9iDoUeWdEDx794RnBTvvtL9hx ansible-generated on rousseau'
+
+  - username: teste
+    state: present
+    key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpmpebfMoXey503kGf24Jr9y+lO7EckjtX6eg1f7c8AoYdUEO8SjFpxgOUtbuh+cXGwXMM02SxmSdMjf48x8+kbSTv7P0HFbmgZZ5HRzdMBq5gwSP091PDfLmqvMikqOJlth72YqTpFazwWYGLRB4II8NNbHniVU5a6lEJ1Q73BAFAkajLzv2cvD0z7Tj4jI4vl2z+UeThVHHcE4WPUjFQfV7iI2e2nawwBgKJ+NqhSqL71jWgyRngpK+3BndIx0I+MyCSPoMrXz9bVc+RYCduRWL9npzxHylImsKTn8pftxeJ/FdwoP2ZOpzC9il06frzpnRD/9U20gZZwbgbWltJ ansible-generated on rousseau'
